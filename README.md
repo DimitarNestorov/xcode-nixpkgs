@@ -48,7 +48,27 @@ Make sure to reference the new package in `pkgs/top-level/darwin-packages.nix`:
 
 ## Example maintenance PRs
 
+- https://github.com/NixOS/nixpkgs/pull/495808/files
 - https://github.com/NixOS/nixpkgs/pull/447107/files
 - https://github.com/NixOS/nixpkgs/pull/423732/files
 - https://github.com/NixOS/nixpkgs/pull/395740/files
 - https://github.com/NixOS/nixpkgs/pull/364482/files
+
+## What can you do in this repo
+
+### Build via `flake.nix`
+
+```console
+$ nix build .#xcode_26_3
+$ readlink -f result/
+/nix/store/x9hdz5mfp44i9b05sswp271jdv68r8vx-Xcode.app
+```
+
+### Build via `default.nix`
+
+```console
+$ NIXPKGS_ALLOW_UNFREE=1 nix-build -A xcode_26_3
+/nix/store/x9hdz5mfp44i9b05sswp271jdv68r8vx-Xcode.app
+$ readlink -f result/
+/nix/store/x9hdz5mfp44i9b05sswp271jdv68r8vx-Xcode.app
+```
