@@ -6,23 +6,34 @@ Yes, it takes a few minutes
 
 ```console
 $ nix-store --add-fixed --recursive sha256 Xcode.app/
-/nix/store/9sqnvjrq826nihb0gvd798d75q6gk52z-Xcode.app
+/nix/store/qdj5n50a3p0nh590gjb6xxyk9dmraf61-Xcode.app
 ```
 
 ## How to get the SHA256 hash of `Xcode.app`
+
+### If it's already in Nix store
+
+```console
+$ nix-store --query --hash /nix/store/qdj5n50a3p0nh590gjb6xxyk9dmraf61-Xcode.app
+sha256:1ch3wv34zs825y9vhains1f4a77a06d6addc2a5r7y5nvdi3ha6h
+```
+
+### Without adding it to Nix store
 
 Yes, it takes a few minutes
 
 ```console
 $ nix-hash --type sha256 Xcode.app/
-3ec1088ebcf181716a096787b3f6ecbeb971cbc68df3df633217ac73331b3df1
+d0283862dbb6f8938b12ac35659a01ea1c455cd0362ab8932f02e94fc6e603b2
 ```
 
 ## How to convert the hash to SRI format
 
 ```console
-$ nix-hash --to-sri --type sha256 3ec1088ebcf181716a096787b3f6ecbeb971cbc68df3df633217ac73331b3df1
-sha256-PsEIjrzxgXFqCWeHs/bsvrlxy8aN899jMhesczMbPfE=
+$ nix-hash --to-sri sha256:1ch3wv34zs825y9vhains1f4a77a06d6addc2a5r7y5nvdi3ha6h
+sha256-0Cg4Ytu2+JOLEqw1ZZoB6hxFXNA2KriTLwLpT8bmA7I=
+$ nix-hash --to-sri --type sha256 d0283862dbb6f8938b12ac35659a01ea1c455cd0362ab8932f02e94fc6e603b2
+sha256-0Cg4Ytu2+JOLEqw1ZZoB6hxFXNA2KriTLwLpT8bmA7I=
 ```
 
 ## How to add a new Xcode entry to nixpkgs
@@ -30,7 +41,7 @@ sha256-PsEIjrzxgXFqCWeHs/bsvrlxy8aN899jMhesczMbPfE=
 Take the SRI and add it to `pkgs/os-specific/darwin/xcode/default.nix`:
 
 ```nix
-xcode_26_0_1 = requireXcode "26.0.1" "sha256-PsEIjrzxgXFqCWeHs/bsvrlxy8aN899jMhesczMbPfE=";
+xcode_26_4 = requireXcode "26.4" "sha256-0Cg4Ytu2+JOLEqw1ZZoB6hxFXNA2KriTLwLpT8bmA7I=";
 ```
 
 Make sure to reference the new package in `pkgs/top-level/darwin-packages.nix`:
@@ -40,7 +51,7 @@ Make sure to reference the new package in `pkgs/top-level/darwin-packages.nix`:
             xcode_8_1
             xcode_8_2
             # ...
-+           xcode_26_0_1
++           xcode_26_4
             xcode
             requireXcode
             ;
@@ -59,16 +70,16 @@ Make sure to reference the new package in `pkgs/top-level/darwin-packages.nix`:
 ### Build via `flake.nix`
 
 ```console
-$ nix build .#xcode_26_3
+$ nix build .#xcode_26_4
 $ readlink -f result/
-/nix/store/x9hdz5mfp44i9b05sswp271jdv68r8vx-Xcode.app
+/nix/store/qdj5n50a3p0nh590gjb6xxyk9dmraf61-Xcode.app
 ```
 
 ### Build via `default.nix`
 
 ```console
-$ NIXPKGS_ALLOW_UNFREE=1 nix-build -A xcode_26_3
-/nix/store/x9hdz5mfp44i9b05sswp271jdv68r8vx-Xcode.app
+$ NIXPKGS_ALLOW_UNFREE=1 nix-build -A xcode_26_4
+/nix/store/qdj5n50a3p0nh590gjb6xxyk9dmraf61-Xcode.app
 $ readlink -f result/
-/nix/store/x9hdz5mfp44i9b05sswp271jdv68r8vx-Xcode.app
+/nix/store/qdj5n50a3p0nh590gjb6xxyk9dmraf61-Xcode.app
 ```
